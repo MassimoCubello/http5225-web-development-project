@@ -3,7 +3,7 @@ Class files and exercises from Web Development Project.
 
 Course Code: HTTP 5225
 
-Professor: Adam Thomas
+Professor: Sam Bebenek
 
 In this project-based course, students connect back-end technologies with front-end technologies to create a content management system.
 
