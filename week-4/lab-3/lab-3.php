@@ -10,67 +10,56 @@
     </head>
     <body>
         <h1>HTTP 5225 Lab 3 - For Loops</h1>
-
-
-
-
         <p>PART 1 - using the array declared below, print the contents out as a list in the 'ul' element below:</p>
-
-
-
 
         <?php
             $myFruits = array('Orange', 'Apple', 'Banana', 'Grapefruit', 'Pear', 'Pineapple');
         ?>
 
-
-
-
         <h2>My favorite fruits:</h2>
         <ul>
-            <?php //HINT - your loop should go here. Since this is in a 'ul', the outputted data should be formatted as 'li' elements. ?>
+            <?php 
+            
+            // HINT - your loop should go here. Since this is in a 'ul', the outputted data should be formatted as 'li' elements.
+
+            for ($i = 0; $i < count($myFruits); $i++) {
+                echo "<li>" . $myFruits[$i] . "</li>";
+            }
+            
+            ?>
            
         </ul>
 
-
-
-
         <hr />
 
-
         <p>PART 2 - create your own function that will print out each element of the $myVegetables array to the page using the PHP code below:</p>
-
-
         <h2>My favorite vegetables:</h2>
-
 
         <?php
        
             function printArray($userArray)
             {
-                // HINT - your function code will go here - how do you loop through elements of a given array? How do you print elements to the page?
-                // Remember you can create a new line/page break in html with <br />
+                // HINT - your function code will go here - how do you loop through elements of a given array? How do you print elements to the page? //
+                // Remember you can create a new line/page break in html with <br /> //
+
+                for ($i = 0; $i < count($userArray); $i++) {
+                    echo $userArray[$i] . "<br />";
+                }
+                
             }
 
-
             $myVegetables = ['Potato', 'Squash', 'Carrot', 'Broccoli', 'Spinach'];
-
 
             printArray($myVegetables); // HINT - once your function code is complete, this function should print elements to the page wherever the function is called
        
         ?>
 
-
         <hr />
-
 
         <p>
             PART 3 - BONUS - The following associative array is a good example of how data from a database or API would be formatted.
             Print the contents of each object in the associative array into the example HTML template shown below.
         </p>
-
-
-
 
         <?php
             $myResourcesArray = array(
@@ -81,13 +70,7 @@
             );
         ?>
 
-
-
-
         <h2>My favorite code resources:</h2>
-
-
-
 
         <?php
         /**
