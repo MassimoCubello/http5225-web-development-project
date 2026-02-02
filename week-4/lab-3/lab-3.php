@@ -40,7 +40,7 @@
             function printArray($userArray)
             {
                 // HINT - your function code will go here - how do you loop through elements of a given array? How do you print elements to the page? //
-                // Remember you can create a new line/page break in html with <br /> //
+                // Remember you can create a new line/page break in html with <br />
 
                 for ($i = 0; $i < count($userArray); $i++) {
                     echo $userArray[$i] . "<br />";
@@ -77,4 +77,5 @@
          * HINT - copy the template div below into a loop that loops through the $myResourcesArray, and echos each value into the relevant spots in the template (you may not need every value in the array).
          * Comment out the template when you are done so the example is not shown on the page.
          */
+         
         ?>
