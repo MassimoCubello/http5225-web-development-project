@@ -1,5 +1,10 @@
 <?php
 
+$nameError = '';
+$emailError = '';
+$provinceError = '';
+$postalCodeError = '';
+
 if(count($_POST) > 0)
 {
     var_dump($_POST);
@@ -17,6 +22,38 @@ if(count($_POST) > 0)
      * and the submitted postal code should also be a valid Canadian postal code.
      */
 
+    // Validate form fields here
+    if(empty($_POST['name']))
+    {
+        $isValid = false;    
+        $nameError = 'Please include your name.';
+    }
+
+    if(empty($_POST['email']))
+    {
+        $isValid = false;    
+        $emailError = 'Please include your email.';
+    } elseif(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) == false)
+    {
+        $isValid = false;    
+        $emailError = 'Please include a valid email address.';
+    }
+
+    if(empty($_POST['province']))
+    {
+        $isValid = false;    
+        $provinceError = 'Please select your province.';
+    }
+
+    if(empty($_POST['postalCode']))
+    {
+        $isValid = false;    
+        $postalCodeError = 'Please include your postal code.';
+    } elseif(preg_match('/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/', $_POST['postalCode']) == false)
+    {
+        $isValid = false;    
+        $postalCodeError = 'Please include a valid postal code.';
+    }
 
     //This shouldn't print if the form is invalid!
     if($isValid)
@@ -43,12 +80,14 @@ if(count($_POST) > 0)
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name">
                 <!-- Error goes here -->
+                <div style="color: red;"><?php echo $nameError; ?></div>
             </div>
 
             <div style="margin-bottom: 0.75rem;">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email">
                 <!-- Error goes here -->
+                <div style="color: red;"><?php echo $emailError; ?></div>
             </div>
 
             <div style="margin-bottom: 0.75rem;">
@@ -69,12 +108,14 @@ if(count($_POST) > 0)
                     <option value="YT">Yukon</option>
                 </select>
                 <!-- Error goes here -->
+                <div style="color: red;"><?php echo $provinceError; ?></div>
             </div>
 
             <div style="margin-bottom: 0.75rem;">
                 <label for="postalCode">Postal Code</label>
                 <input type="text" name="postalCode" id="postalCode">
                 <!-- Error goes here -->
+                <div style="color: red;"><?php echo $postalCodeError; ?></div>
             </div>
 
             <button type="submit">Submit</button>
