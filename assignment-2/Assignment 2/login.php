@@ -1,96 +1,121 @@
 <?php
 
+// Login Crentials for Testing
+// Email: author@email.com
+// Password: books
+
 session_start();
 
-$isValid = true;
+$error = '';
 
-if(count($_POST) > 0)
+if ($_SERVER['REQUEST_METHOD'] === 'POST')
 {
-    //var_dump($_POST);
+    // Database connection
+    $conn = new mysqli("localhost", "root", "root", "personal_query_tracker", 8889);
 
-    $conn = new mysqli("localhost","root","root","login", 3306);
-
-    if(empty($_POST['email']) || empty($_POST['password']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
-    {
-        $isValid = false;
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
     }
 
-    if($isValid == true)
-    {
-        $query = 'SELECT id, email, password FROM users WHERE email = ? LIMIT 1';
-        $stmt = $conn->prepare($query); 
-        $stmt->bind_param('s', $_POST['email']); 
-        if($stmt->execute() == false)
-        {
-            echo "Execute failed: " . $stmt->error;
-        }
-        else 
-        {
-            $result = $stmt->get_result();
-            $user = $result->fetch_all(MYSQLI_ASSOC)[0];
+    // Get form values
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
 
-            //var_dump($user);
-            if(empty($user))
-            {
-                echo 'User not found';   
-            }
-            else 
-            {
-                if( password_verify($_POST['password'], $user['password'])  == true)
-                {
-                    //password is valid for the given email. We can now login 
+    // Validation
+    if (empty($email) || empty($password)) {
+        $error = "Please fill in all fields.";
+    } 
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Please enter a valid email address.";
+    } 
+    else {
+        // Prepare query
+        $query = "SELECT id, email, password, first_name FROM users WHERE email = ? LIMIT 1";
+        $stmt = $conn->prepare($query);
+
+        if ($stmt === false) {
+            die("Prepare failed: " . $conn->error);
+        }
+
+        $stmt->bind_param("s", $email);
+
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            $user = $result->fetch_assoc();
+
+            if (!$user) {
+                $error = "User not found.";
+            } 
+            else {
+                // Verify password
+                if (password_verify($password, $user['password'])) {
+                    // Store session data
                     $_SESSION['id'] = $user['id'];
                     $_SESSION['email'] = $user['email'];
+                    $_SESSION['first_name'] = $user['first_name'];
 
-                    //redirect or change some other page settings
-                    header('Location: dashboard.php');
-
-                }
-                else 
-                {
-                    echo 'Incorrect email address or password';
+                    // Redirect to dashboard
+                    header("Location: dashboard.php");
+                    exit();
+                } 
+                else {
+                    $error = "Incorrect email or password.";
                 }
             }
+        } 
+        else {
+            $error = "Something went wrong. Please try again.";
         }
+
+        $stmt->close();
     }
+
+    $conn->close();
 }
-
-// $hash = password_hash('apples', PASSWORD_DEFAULT);
-
-// var_dump( password_verify('apples', $hash) );
-
-
-
-
 
 ?>
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Login Page</title>
-    </head>
-    <body>
-        <h1>Week 7 - Login & Session Handling</h1>
+<head>
+    <title>Login Page</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
 
-        <div style="color:red;">
-            <?php if($isValid == false) : ?>
-                There was an error logging in
-            <?php endif; ?>
+    <h1>Personal Query Tracker</h1>
+
+    <p>Dreaming of being a published author? We're here to help! Track your literary agent queries in one place. Please log in to access your dashboard.</p>
+
+    <h2>Login</h2>
+
+    <!-- Error Message -->
+    <?php if (!empty($error)) : ?>
+        <div class="error-message">
+            <?= $error ?>
+        </div>
+    <?php endif; ?>
+
+    <!-- Login Form -->
+    <form method="post">
+        <div>
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required>
         </div>
 
         <div>
-            <form action="" method="post">
-                <div>
-                    <label for="email">Email Address:</label>
-                    <input type="email" id="email" name="email">
-                </div>
-                <div>
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password">
-                </div>
-                <button type="submit" name="submit" value="">Submit</button>
-            </form>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
         </div>
-    </body>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <!-- <?php
+
+    // echo password_hash('books', PASSWORD_DEFAULT);
+
+    ?> -->
+
+</body>
 </html>
