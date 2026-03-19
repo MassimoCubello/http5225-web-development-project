@@ -10,7 +10,7 @@ $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST')
 {
-    // Database connection
+    // Connection
     $conn = new mysqli("localhost", "root", "root", "personal_query_tracker", 8889);
 
     if ($conn->connect_error) {
