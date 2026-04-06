@@ -1,19 +1,22 @@
 <?php 
+    session_start();
+    if(!isset($_SESSION['id']))
+    {
+        header("Location: login.php"); // Redirect to login page if the user is not authenticated
+        exit();
+    }
+    
+    if(!isset($_GET['id']) || !is_numeric($_GET['id']))
+    {
+        header("Location: dashboard.php"); // Redirect to dashboard if the blog post ID is not provided or is not a valid number
+        exit();
+    }
+
     $page_title = "Blog Post Details";
 ?>
 <?php require_once('components/header.php'); ?>
 
 <?php
-if(!isset($_SESSION['id']))
-{
-    header("Location: login.php"); // Redirect to login page if the user is not authenticated
-    exit();
-}    
-if(!isset($_GET['id']) ||!is_numeric($_GET['id']))
-{
-    header("Location: dashboard.php"); // Redirect to dashboard if the blog post ID is not provided or is not a valid number
-    exit();
-}
 
 // get blog posts for the logged-in user from database
 $query = 'SELECT id, title, date_created, date_published, post, image_href FROM blog_posts WHERE user_id = ? AND id = ? LIMIT 1';
@@ -30,6 +33,8 @@ if(empty($posts)) {
     header("Location: dashboard.php"); // Redirect to dashboard if the blog post is not found
     exit();
 }
+
+$post = $posts[0]; // Extract the single post from the array
 ?>
 
 <nav aria-label="breadcrumb">
@@ -53,7 +58,7 @@ if(empty($posts)) {
     </form>
 
 <div>
-    <a href="edit-post.php?id=<?= $post['id'] ?>" class="btn btn-secondary">Edit Blog Post</a>
+    <a href="update-post.php?id=<?= $post['id'] ?>" class="btn btn-secondary">Edit Blog Post</a>
     <a href ="delete-post.php?id=<?= $post['id'] ?>" class="btn btn-danger">Delete Blog Post</a>
 </div>
 

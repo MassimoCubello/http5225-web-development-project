@@ -1,18 +1,14 @@
 <?php 
+    session_start();
+    if(!isset($_SESSION['id']))
+    {
+        header("Location: login.php"); // Redirect to login page if the user is not authenticated
+        exit();
+    }
 
     $page_title = "Dashboard";
-
 ?>
 <?php require_once('components/header.php'); ?>
-
-
-<?php
-if(!isset($_SESSION['id']))
-{
-    header("Location: login.php"); // Redirect to login page if the user is not authenticated
-    exit();
-}    
-?>
 
 <?php
 

@@ -39,8 +39,8 @@
             else
                 {
                     $result = $stmt->get_result();
-                    $user = $result->fetch_assoc(MYSQLI_ASSOC);
-                    var_dump($user); 
+                    $user = $result->fetch_assoc();
+
 
                     if(empty($user)) 
                     {
@@ -55,7 +55,7 @@
                           
                           header("Location: dashboard.php"); // Redirect to homepage after successful login
                           exit(); // Ensure no further code is executed after the redirect
-  
+
                         }
                       else
                         {
@@ -70,6 +70,12 @@
 
   <h1>Blog Login</h1>
   
+  <?php if(isset($errorMessage)): ?>
+    <div class="alert alert-danger" role="alert">
+      <?= htmlspecialchars($errorMessage) ?>
+    </div>
+  <?php endif; ?>
+  
   <form action="login.php" method="post">
     <div class="mb-3">
       <label for="email" class="form-label">Email:</label>
@@ -82,7 +88,7 @@
     </div>  
     
     <div class="mb-3 form-check">
-      <input type="submit" value="Login" class="btn btn-primary">
+      <input type="submit" name="login" value="Login" class="btn btn-primary">
     </div>  
   </form>
 

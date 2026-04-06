@@ -5,7 +5,9 @@
         $title = "Blog";
     }
 
-    session_start(); // Start the session to manage user authentication and other session data
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start(); // Start the session to manage user authentication and other session data
+    }
 
     $db = new mysqli("localhost", "root", "root", "cms-blog", 8889);
     if($db->connect_error) {

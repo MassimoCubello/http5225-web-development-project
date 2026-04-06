@@ -1,22 +1,22 @@
 <?php 
+    session_start();
+    if(!isset($_SESSION['id']))
+    {
+        header("Location: login.php"); // Redirect to login page if the user is not authenticated
+        exit();
+    }
+    
+    if(!isset($_GET['id']) || !is_numeric($_GET['id']))
+    {
+        header("Location: dashboard.php"); // Redirect to dashboard if the blog post ID is not provided or is not a valid number
+        exit();
+    }
+
     $page_title = "Update Blog Post";
 ?>
 <?php require_once('components/header.php'); ?>
 
 <?php
-if(!isset($_SESSION['id']))
-{
-    header("Location: login.php"); // Redirect to login page if the user is not authenticated
-    exit();
-}    
-?>
-
-<?php
-if(!isset($_GET['id']) ||!is_numeric($_GET['id']))
-{
-    header("Location: dashboard.php"); // Redirect to dashboard if the blog post ID is not provided or is not a valid number
-    exit();
-}
 
 // get blog posts for the logged-in user from database
 $query = 'SELECT id, title, date_created, date_published, post, image_href FROM blog_posts WHERE user_id = ? AND id = ? LIMIT 1';
@@ -36,11 +36,9 @@ if(empty($posts)) {
 
 // end of post authentication and retrieval logic
 
+$post = $posts[0]; // Extract the single post from the array
 
-
-
-
-if(isset($_POST['title']) || empty($_POST['post']))
+if(isset($_POST['submit']))
 {
     $isValid = true;
     if(empty($_POST['title']) || empty($_POST['post']))
@@ -73,7 +71,7 @@ if(isset($_POST['title']) || empty($_POST['post']))
                 {
                     $_SESSION['success'] = "Blog post has been updated successfully!"; // Set a success message in the session
                     header("Location: post-details.php?id=" . $_GET['id']);
-                    
+                    exit();
                 }
         }
 }
